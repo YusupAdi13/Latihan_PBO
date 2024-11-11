@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-import kelas.Category;
 import kelas.Product;
 
 /**

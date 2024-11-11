@@ -6,14 +6,11 @@ import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 import kelas.Category;
 
-/**
- *
- * @author MyBook Hype
- */
+
 public class FrameCategory extends javax.swing.JFrame {
 
     /**
-     * Creates new form FrameCategory
+     * Creates new form FrameCategor
      */
     public FrameCategory() {
         initComponents();
@@ -38,7 +35,30 @@ public class FrameCategory extends javax.swing.JFrame {
             }
             }catch (SQLException sQLException) {
         }
+        //Handle exception
     }
+
+    void reset() {
+        otoID();
+        Tid.setEditable(false);
+        Tkategori.setText(null);
+    }
+ void otoID() {
+        try {
+
+            Category cat = new Category();
+            ResultSet id = cat.otoID();
+
+            if (id.next()) {
+                int auto = id.getInt("ID") + 1;
+                Tid.setText(String.valueOf(auto));
+                
+            } else {
+                Tid.setText("1");
+
+            }
+        } catch (SQLException sQLException) {
+}
 
     /**
      * This method is called from within the constructor to initialize the form.

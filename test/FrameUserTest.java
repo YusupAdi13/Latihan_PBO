@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 
-import Tampilan.FrameUser;
+import Tampilan.user;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,13 +37,13 @@ public class FrameUserTest {
     }
 
     /**
-     * Test of main method, of class FrameUser.
+     * Test of main method, of class user.
      */
     @Test
     public void testMain() {
         System.out.println("main");
         String[] args = null;
-        FrameUser.main(args);
+        user.main(args);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
