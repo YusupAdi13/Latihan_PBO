@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Tampilan;
 
 import java.sql.ResultSet;
@@ -9,12 +5,9 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import KELAS.Category;
 import kelas.Product;
 
-/**
- *
- * @author MyBook Hype
- */
 public class FrameProduct extends javax.swing.JFrame {
 
     /**
@@ -22,6 +15,70 @@ public class FrameProduct extends javax.swing.JFrame {
      */
     public FrameProduct() {
         initComponents();
+        loadtabel();
+        autoID();
+        comboCategory();
+    }
+    void loadtabel(){
+        DefaultTableModel model=new DefaultTableModel();
+        model.addColumn("id product");
+        model.addColumn("nama product");
+        model.addColumn("deskripsi");
+        model.addColumn("harga");
+        model.addColumn("category");
+        
+        try {
+            Product prd=new Product();
+            ResultSet data=prd.tampilProduk();
+            while (data.next()){
+                model.addRow(new Object[]{
+                    data.getString("produk_id"),
+                    data.getString("produk_name"),
+                    data.getString("produk_desc"),
+                    data.getString("produk_price"),
+                    data.getString("category_name"),});
+                }
+            }catch(SQLException sQLException){
+                
+        }
+        Tproduk.setModel(model);
+    }
+    void comboCategory(){
+        try{
+        Category cat = new Category();
+        ResultSet data = cat.tampilComboBox();
+        
+        while (data.next()){
+            String isi = data.getString("category_name");
+            Tkat.addItem(isi);
+        }
+    }catch (SQLException ex){
+        Logger.getLogger(FrameProduct.class.getName()).log(Level.SEVERE,null, ex);
+    }
+    }
+    void autoID(){
+        try{
+            Product prod = new Product();
+            ResultSet id = prod.autoID();
+            
+             if (id.next()){
+                 int auto = id.getInt("produk_id")+1;
+                 Tid.setText(String.valueOf(auto));
+                 
+             }else{
+                 Tid.setText("1");
+             }
+             Tid.setEditable(false);
+        }catch(SQLException sQLException){
+        }
+    }
+    void reset(){
+        
+        autoID();
+        Tnama.setText(null);
+        Tdes.setText(null);
+        Tharga.setText(null);
+        Tkat.setSelectedItem(null);
     }
 
     /**
@@ -39,17 +96,16 @@ public class FrameProduct extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        Ytambah = new javax.swing.JButton();
-        Yhapus = new javax.swing.JButton();
-        Yubah = new javax.swing.JButton();
-        Yid = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        pProduk = new javax.swing.JTable();
-        jTextField2 = new javax.swing.JTextField();
-        Ynama = new javax.swing.JTextField();
-        Ydeskripsi = new javax.swing.JTextField();
-        Yharga = new javax.swing.JTextField();
-        Ykategori = new javax.swing.JComboBox<>();
+        Tproduk = new javax.swing.JTable();
+        Tkat = new javax.swing.JComboBox<>();
+        Ttambah = new javax.swing.JButton();
+        Tid = new javax.swing.JTextField();
+        Tnama = new javax.swing.JTextField();
+        Tdes = new javax.swing.JTextField();
+        Tharga = new javax.swing.JTextField();
+        Thapus = new javax.swing.JButton();
+        Tubah = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,13 +124,7 @@ public class FrameProduct extends javax.swing.JFrame {
 
         jLabel6.setText("Kategori");
 
-        Ytambah.setText("Tambah");
-
-        Yhapus.setText("Hapus");
-
-        Yubah.setText("Ubah");
-
-        pProduk.setModel(new javax.swing.table.DefaultTableModel(
+        Tproduk.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -85,14 +135,40 @@ public class FrameProduct extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(pProduk);
+        Tproduk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TprodukMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Tproduk);
 
-        jTextField2.setText("jTextField2");
-
-        Ykategori.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
-        Ykategori.addActionListener(new java.awt.event.ActionListener() {
+        Tkat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                YkategoriActionPerformed(evt);
+                TkatActionPerformed(evt);
+            }
+        });
+
+        Ttambah.setText("Tambah");
+        Ttambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TtambahActionPerformed(evt);
+            }
+        });
+
+        Tdes.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        Tdes.setDragEnabled(true);
+
+        Thapus.setText("Hapus");
+        Thapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ThapusActionPerformed(evt);
+            }
+        });
+
+        Tubah.setText("Ubah");
+        Tubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TubahActionPerformed(evt);
             }
         });
 
@@ -112,35 +188,30 @@ public class FrameProduct extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(Tdes, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                                    .addComponent(Tid)
+                                    .addComponent(Tnama)))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(49, 49, 49)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(Ynama, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Ydeskripsi, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(Yid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(Thapus)
+                                .addGap(44, 44, 44)
+                                .addComponent(Tubah))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(Yharga)
-                                    .addComponent(Ykategori, 0, 164, Short.MAX_VALUE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Tkat, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Tharga, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(30, 30, 30))))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Ytambah)
-                        .addGap(47, 47, 47)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(Yhapus)
-                                .addGap(47, 47, 47)
-                                .addComponent(Yubah)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(16, 16, 16)
+                        .addComponent(Ttambah)
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(37, 37, 37))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,49 +219,124 @@ public class FrameProduct extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(46, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(Yid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Tid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(Ynama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Ydeskripsi, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(54, 54, 54)
+                            .addComponent(Tnama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Tdes, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(61, 61, 61)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(Yharga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Tharga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(Ykategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Tkat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Ytambah)
-                            .addComponent(Yhapus)
-                            .addComponent(Yubah))
+                            .addComponent(Ttambah)
+                            .addComponent(Thapus)
+                            .addComponent(Tubah))
                         .addGap(26, 26, 26))))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void YkategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YkategoriActionPerformed
+    private void TkatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TkatActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_YkategoriActionPerformed
+    }//GEN-LAST:event_TkatActionPerformed
+
+    private void TtambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TtambahActionPerformed
+        // TODO add your handling code here:
+        try {
+            Product prod = new Product();
+            Category cat = new Category();
+            prod.setProduct_id(Integer.parseInt(Tid.getText()));
+            prod.setProduct_name(Tnama.getText());
+            prod.setProduct_desc(Tdes.getText());
+            prod.setProduct_price(Integer.parseInt(Tharga.getText()));
+            String selectedCategory = (String) Tkat.getSelectedItem();
+            cat.setCategory_name(Tkat.getSelectedItem().toString());
+            ResultSet data = cat.Konversi();
+
+            if (data.next()) {
+                String isi = data.getString("category_id");
+                prod.setProduct_cat_id(Integer.parseInt(isi));
+            }
+
+            prod.tambahProduct();
+        } catch (SQLException sQLException) {
+            System.out.println("Data tidak masuk");
+        }
+        loadtabel();
+        reset();
+    }//GEN-LAST:event_TtambahActionPerformed
+
+    private void ThapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ThapusActionPerformed
+        // TODO add your handling code here:
+        try {
+            Product prod = new Product();
+            prod.setProduct_id(Integer.parseInt(Tid.getText()));
+            prod.hapusProduk();
+        } catch (SQLException sQLException) {
+        }
+        loadtabel();
+        reset();
+    }//GEN-LAST:event_ThapusActionPerformed
+
+    private void TubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TubahActionPerformed
+        try {
+            Product prod = new Product();
+            Category cat = new Category();
+            prod.setProduct_id(Integer.parseInt(Tid.getText()));
+            prod.setProduct_name(Tnama.getText());
+            prod.setProduct_desc(Tdes.getText());
+            prod.setProduct_price(Integer.parseInt(Tharga.getText()));
+            String selectedCategory = (String) Tkat.getSelectedItem();
+            cat.setCategory_name(Tkat.getSelectedItem().toString());
+            ResultSet data = cat.Konversi();
+
+            if (data.next()) {
+                String isi = data.getString("category_id");
+                prod.setProduct_cat_id(Integer.parseInt(isi));
+            }
+
+            prod.ubahProduct();
+        } catch (SQLException sQLException) {
+            System.out.println("Data tidak masuk");
+        }
+        loadtabel();
+        reset();
+    }//GEN-LAST:event_TubahActionPerformed
+
+    private void TprodukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TprodukMouseClicked
+        // TODO add your handling code here:
+        int baris = Tproduk.rowAtPoint(evt.getPoint());
+        String productID = Tproduk.getValueAt(baris, 0).toString();
+        String productName = Tproduk.getValueAt(baris, 1).toString();
+        String productDesc = Tproduk.getValueAt(baris, 2).toString();
+        String productPrice = Tproduk.getValueAt(baris, 3).toString();
+        String productCat = Tproduk.getValueAt(baris, 4).toString();
+
+        Tid.setText(productID);
+        Tid.setEditable(false);
+        Tnama.setText(productName);
+        Tdes.setText(productDesc);
+        Tharga.setText(productPrice);
+        Tkat.setSelectedItem(productCat);
+    }//GEN-LAST:event_TprodukMouseClicked
 
     /**
      * @param args the command line arguments
@@ -228,14 +374,15 @@ public class FrameProduct extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField Ydeskripsi;
-    private javax.swing.JButton Yhapus;
-    private javax.swing.JTextField Yharga;
-    private javax.swing.JTextField Yid;
-    private javax.swing.JComboBox<String> Ykategori;
-    private javax.swing.JTextField Ynama;
-    private javax.swing.JButton Ytambah;
-    private javax.swing.JButton Yubah;
+    private javax.swing.JTextField Tdes;
+    private javax.swing.JButton Thapus;
+    private javax.swing.JTextField Tharga;
+    private javax.swing.JTextField Tid;
+    private javax.swing.JComboBox<String> Tkat;
+    private javax.swing.JTextField Tnama;
+    private javax.swing.JTable Tproduk;
+    private javax.swing.JButton Ttambah;
+    private javax.swing.JButton Tubah;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -243,7 +390,5 @@ public class FrameProduct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTable pProduk;
     // End of variables declaration//GEN-END:variables
 }

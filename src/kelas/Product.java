@@ -70,7 +70,7 @@ public class Product {
         this.product_desc = product_desc;
     }
     public void tambahProduct() {
-        String quey = "INSERT INTO product VALUES(?,?,?,?,?,?)";
+        String quey = "INSERT INTO products VALUES(?,?,?,?,?)";
         try {
             ps = konek.prepareStatement(quey);
             ps.setInt(1, product_id);
@@ -87,24 +87,25 @@ public class Product {
         }
     }
     public ResultSet tampilProduk(){
-        query = "p.product_price AS Harga,"
-                +"SELECT"
-                +"p.product_id AS ID,"
-                +"p.product_name AS Nama,"
-                +"p.product_desc AS Deskripsi,"
-                +"c.category_name AS Kategori"
-                +"FROM product p"
-                +"JOIN category c ON p.product_cat_id = c.category_id";
+        query = "SELECT "
+                + "p.produk_id,"
+                + "p.produk_name,"
+                + "p.produk_desc,"
+                + "p.produk_price,"
+                + "c.category_name "
+                + "FROM products p "
+                + "JOIN category c ON p.produk_card_id = c.category_id";
         try {
-            st = konek.createStatement();
-            rs = st.executeQuery(query);
-        } catch (SQLException sQLException) {
-            JOptionPane.showMessageDialog(null,"Data Gagal Tampil");
+            st=konek.createStatement();
+            rs=st.executeQuery(query);
+            
+        } catch(SQLException sQLException){
+            JOptionPane.showMessageDialog(null, "Data Gagal Tampil");
         }
         return rs;
     }
     public void hapusProduk(){
-        query = "DELETE FROM product WHERE product_id = ?";
+        query = "DELETE FROM products WHERE produk_id = ?";
         try {
             ps = konek.prepareStatement(query);
             ps.setInt(1, product_id);
@@ -112,16 +113,16 @@ public class Product {
             ps.close();
             JOptionPane.showMessageDialog(null, "Product Berhasil Dihapus");
         } catch (SQLException sQLException) {
-            JOptionPane.showInputDialog(null, "Product Gagal Dihapus");
+            JOptionPane.showMessageDialog(null, "Product Gagal Dihapus");
         }
     }
     public void ubahProduct() throws SQLException{
-        query = "UPDATE product"
-                + "SET product_name = ?,"
-                + "product_desc = ?, "
-                + "product_price = ?, "
-                + "product_cat_id = ? "
-                + "WHERE product_id = ?";
+        query = "UPDATE products "
+                + "SET produk_name = ?,"
+                + "produk_desc = ?,"
+                + "produk_price = ?,"
+                + "produk_card_id = ? "
+                + "WHERE produk_id = ?";
         try {
             ps = konek.prepareStatement(query);
             ps.setString(1, product_name);
@@ -140,7 +141,7 @@ public class Product {
 
     }
     
-    public ResultSet otoID(){
+    public ResultSet autoID(){
         query = "SELECT produk_id FROM products ORDER BY produk_id DESC LIMIT 1";
         try{
            st = konek.createStatement();

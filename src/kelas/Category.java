@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package KELAS;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,21 +88,22 @@ public class Category {
          
          }
       public void ubahCategory(){
-            query = "UPDATE category SET"
-                    + "category_name = ?,"
-                    + "WHERE category_id = ?";
-           try {
-              ps = konek.prepareStatement(query);
-              ps.setString(1, category_name);
-              ps.setInt(2, category_id);
-              
-              ps.executeUpdate();
-              ps.close();
-              JOptionPane.showMessageDialog(null, "Category berhasil diubah");
-          } catch (SQLException sQLException) {
-          JOptionPane.showMessageDialog(null, "Category Gagal diubah");
+            query = "UPDATE category SET category_name = ? "
+                + " WHERE category_id = ?";
+        try {
 
-          }
+            ps = konek.prepareStatement(query);
+
+            ps.setString(1, category_name);
+            ps.setInt(2, category_id);
+
+            ps.executeUpdate();
+            ps.close();
+            JOptionPane.showMessageDialog(null, "Category Berhasil Di Ubah");
+
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Category Gagal Di Ubah");
+        }
       }
       public ResultSet autoID(){
     query = "SELECT category_id AS ID FROM category ORDER BY category_id DESC LIMIT 1";

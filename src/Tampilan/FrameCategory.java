@@ -1,32 +1,39 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package Tampilan;
 
 import KELAS.Category;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
-import kelas.Category;
+import KELAS.Category;
 
-
+/**
+ *
+ * @author MyBook Hype
+ */
 public class FrameCategory extends javax.swing.JFrame {
 
     /**
-     * Creates new form FrameCategor
+     * Creates new form FrameCategoryy
      */
     public FrameCategory() {
         initComponents();
-        loadTable();
-        otoID();
+        loadTabel();
+        autoID();
         reset();
     }
     
-    void loadTable() {
+     void loadTabel() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("ID KATEGORI");
         model.addColumn("KATEGORI");
         
         try {
-            Category cat = new Category();
-            ResultSet data = cat.tampilCategory();
+            Category us = new Category();
+            ResultSet data = us.tampilCategory();
             
             while (data.next()) {
                 model.addRow(new Object[]{
@@ -35,19 +42,20 @@ public class FrameCategory extends javax.swing.JFrame {
             }
             }catch (SQLException sQLException) {
         }
-        //Handle exception
+        Ucategory.setModel(model);
     }
-
+    
     void reset() {
-        otoID();
+        autoID();
         Tid.setEditable(false);
-        Tkategori.setText(null);
+        Tnama.setText(null);
     }
- void otoID() {
+    
+    void autoID() {
         try {
 
             Category cat = new Category();
-            ResultSet id = cat.otoID();
+            ResultSet id = cat.autoID();
 
             if (id.next()) {
                 int auto = id.getInt("ID") + 1;
@@ -59,6 +67,8 @@ public class FrameCategory extends javax.swing.JFrame {
             }
         } catch (SQLException sQLException) {
 }
+        
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,7 +83,7 @@ public class FrameCategory extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         Tid = new javax.swing.JTextField();
-        Tkategori = new javax.swing.JTextField();
+        Tnama = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         Ucategory = new javax.swing.JTable();
         Ttambah = new javax.swing.JButton();
@@ -85,7 +95,7 @@ public class FrameCategory extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel1.setText("FrameCategory");
 
-        jLabel2.setText("KATEGORY");
+        jLabel2.setText("nama");
 
         jLabel3.setText("ID");
 
@@ -98,13 +108,33 @@ public class FrameCategory extends javax.swing.JFrame {
                 "Title 1", "Title 2"
             }
         ));
+        Ucategory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                UcategoryMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(Ucategory);
 
         Ttambah.setText("Tambah");
+        Ttambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TtambahActionPerformed(evt);
+            }
+        });
 
         Thapus.setText("Hapus");
+        Thapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ThapusActionPerformed(evt);
+            }
+        });
 
         Tubah.setText("Ubah");
+        Tubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TubahActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,13 +151,13 @@ public class FrameCategory extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addComponent(Thapus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                         .addComponent(Tubah))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
-                            .addComponent(Tkategori, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(Tnama, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(Tid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))))
                 .addGap(20, 20, 20))
             .addGroup(layout.createSequentialGroup()
@@ -147,8 +177,8 @@ public class FrameCategory extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(Tkategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                    .addComponent(Tnama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Ttambah)
                     .addComponent(Thapus)
@@ -160,6 +190,56 @@ public class FrameCategory extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void UcategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UcategoryMouseClicked
+        // TODO add your handling code here:
+        int baris =Ucategory.rowAtPoint(evt.getPoint());
+        String idCategory=Ucategory.getValueAt(baris, 0).toString();
+        String nama=Ucategory.getValueAt( baris, 1).toString();
+        
+        Tid.setText(idCategory);
+        
+        Tnama.setText(nama);
+    }//GEN-LAST:event_UcategoryMouseClicked
+
+    private void TtambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TtambahActionPerformed
+        try {
+            Category category = new Category();
+            category.setCategory_id(Integer.parseInt(Tid.getText()));
+            category.setCategory_name(Tnama.getText());
+
+            category.tambahcategory();
+        }catch (SQLException sQLException) {
+        }
+        loadTabel();
+        reset();
+    }//GEN-LAST:event_TtambahActionPerformed
+
+    private void ThapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ThapusActionPerformed
+        // TODO add your handling code here:
+        try {
+            Category usr = new Category();
+            usr.setCategory_id(Integer.parseInt(Tid.getText()));
+            usr.hapusCategory();
+        }catch (SQLException sQLException) {
+        }
+        loadTabel();
+        reset();
+    }//GEN-LAST:event_ThapusActionPerformed
+
+    private void TubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TubahActionPerformed
+        // TODO add your handling code here:
+        try {
+            Category usr = new Category();
+            usr.setCategory_id(Integer.parseInt(Tid.getText()));
+            usr.setCategory_name(Tnama.getText());
+            
+            usr.ubahCategory();
+        }catch (SQLException sQLException) {
+        }
+        loadTabel();
+        reset();
+    }//GEN-LAST:event_TubahActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,6 +267,7 @@ public class FrameCategory extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrameCategory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -199,7 +280,7 @@ public class FrameCategory extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Thapus;
     private javax.swing.JTextField Tid;
-    private javax.swing.JTextField Tkategori;
+    private javax.swing.JTextField Tnama;
     private javax.swing.JButton Ttambah;
     private javax.swing.JButton Tubah;
     private javax.swing.JTable Ucategory;
